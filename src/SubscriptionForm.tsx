@@ -8,7 +8,7 @@ export interface ISubscriptionFormInputs {
   email: string;
 }
 
-// Styled Components по БЭМ и адаптив
+// ==== Styled Components ====
 const Subscription = styled.section`
   display: flex;
   justify-content: center;
@@ -124,10 +124,46 @@ const Subscription__error = styled.span`
   margin-top: 4px;
 `;
 
-const Subscription__success = styled.div`
+// ==== Modal ====
+const Modal__overlay = styled.div`
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 999;
+`;
+
+const Modal__content = styled.div`
+  background: #fff;
+  padding: 32px;
+  border-radius: 16px;
+  max-width: 400px;
+  text-align: center;
+  box-shadow: 0 6px 32px rgba(0, 0, 0, 0.2);
+`;
+
+const Modal__title = styled.h3`
+  font-size: 1.25rem;
+  font-weight: 700;
   color: #388e3c;
+  margin-bottom: 16px;
+`;
+
+const Modal__text = styled.p`
   font-size: 1rem;
-  margin-top: 8px;
+  color: #333;
+  margin-bottom: 24px;
+`;
+
+const Modal__button = styled.button`
+  padding: 10px 20px;
+  background: #a14669;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
 `;
 
 const SubscriptionFormInner: React.FC = () => {
@@ -139,15 +175,17 @@ const SubscriptionFormInner: React.FC = () => {
   } = useForm<ISubscriptionFormInputs>();
   const [status, setStatus] = useState<'idle' | 'success' | 'error'>('idle');
   const [message, setMessage] = useState('');
+  const [isModalOpen, setModalOpen] = useState(false);
 
   const onSubmit: SubmitHandler<ISubscriptionFormInputs> = async (data) => {
     setStatus('idle');
     setMessage('');
     try {
-      await axios.post('/api/subscribe', { email: data.email });
+      await axios.post('https://reqres.in/api/users', { email: data.email });
       setStatus('success');
       setMessage('Дякуємо за підписку!');
       reset();
+      setModalOpen(true);
     } catch (error: unknown) {
       setStatus('error');
       const msg = error || 'Щось пішло не так. Спробуйте ще раз.';
@@ -179,8 +217,17 @@ const SubscriptionFormInner: React.FC = () => {
         </Subscription__button>
       </Subscription__form>
       {errors.email && <Subscription__error>{errors.email.message}</Subscription__error>}
-      {status === 'success' && <Subscription__success>{message}</Subscription__success>}
       {status === 'error' && <Subscription__error>{message}</Subscription__error>}
+
+      {isModalOpen && (
+        <Modal__overlay>
+          <Modal__content>
+            <Modal__title>Успіх!</Modal__title>
+            <Modal__text>{message}</Modal__text>
+            <Modal__button onClick={() => setModalOpen(false)}>Закрити</Modal__button>
+          </Modal__content>
+        </Modal__overlay>
+      )}
     </Subscription__content>
   );
 };
