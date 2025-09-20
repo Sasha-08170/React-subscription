@@ -2,6 +2,8 @@
 
 Адаптивный React-компонент формы подписки с валидацией email, модальным окном подтверждения и отправкой данных на тестовый API.
 
+<img width="810" height="473" alt="Screenshot_2025_09_20-10" src="https://github.com/user-attachments/assets/27614ceb-d47f-4d09-a9bc-5eae1593eaee" />
+
 ---
 
 ## ✨ Возможности
