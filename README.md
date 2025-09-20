@@ -27,9 +27,3 @@
 
 ---
 
-## 🚀 Установка и использование
-
-1. Установите зависимости:
-   ```bash
-   npm install react-hook-form axios styled-components`
-   ```
